@@ -1,0 +1,7 @@
+This is Operator, a shared address book application for Android.
+
+We plan to support other mobile devices some day.
+
+Right now, we're using Google's C2DM protocol (http://code.google.com/android/c2dm/) to send messages to clients.  A similar protocol exists for iOS and Windows Phone 7.
+
+There's going to be a backend server.  The code for it doesn't live anywhere, yet.
