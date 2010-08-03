@@ -15,8 +15,9 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.AdapterView;
 
-public class OperatorActivity extends Activity
+public class MyContacts extends Activity
 {
 
     private ListView mContactList;
@@ -36,6 +37,13 @@ public class OperatorActivity extends Activity
 
         mContactList = (ListView) findViewById(R.id.contactList);
         populateContactList();
+
+        mContactList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+          public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            startActivity(new Intent(MyContacts.this, TheirContacts.class));
+          }
+        });
+
     }
 
     private void populateContactList() {
