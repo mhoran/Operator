@@ -4,15 +4,19 @@
       android:versionCode="1"
       android:versionName="1.0">
     <application android:label="@string/app_name" android:icon="@drawable/icon">
-        <activity android:name="MyContacts"
+        <activity android:name=".MyContacts"
                   android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="TheirContacts"
+        <activity android:name=".TheirContacts"
                   android:label="Their Contacts">
+            <intent-filter>
+               <action android:name="android.intent.action.VIEW" />
+               <category android:name="android.intent.category.DEFAULT" />
+             </intent-filter>
         </activity>
     </application>
     <uses-sdk android:minSdkVersion="8" />
