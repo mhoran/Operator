@@ -10,9 +10,12 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.AdapterView;
+import android.content.Context;
+import android.util.Log;
 
 public class MyContacts extends Activity
 {
+    private static final String TAG = "MyContacts";
 
     private ListView mContactList;
 
@@ -29,11 +32,14 @@ public class MyContacts extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.my_contacts);
 
-        mContactList = (ListView) findViewById(R.id.contactList);
+        mContactList = (ListView)findViewById(R.id.contactList);
         populateContactList();
 
         mContactList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
           public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Cursor cursor = (Cursor)parent.getItemAtPosition(position);
+            int nameColumn = cursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME);
+            Log.d(TAG, cursor.getString(nameColumn));
             startActivity(new Intent(MyContacts.this, TheirContacts.class));
           }
         });
