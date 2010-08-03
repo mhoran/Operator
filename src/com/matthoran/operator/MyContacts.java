@@ -58,7 +58,7 @@ public class MyContacts extends Activity
         ContactsContract.Contacts._ID,
         ContactsContract.Contacts.DISPLAY_NAME
       };
-      String selection = ContactsContract.Contacts.IN_VISIBLE_GROUP + " = '1'";
+      String selection = null;
       String[] selectionArgs = null;
       String sortOrder = ContactsContract.Contacts.DISPLAY_NAME + " COLLATE LOCALIZED ASC";
 
