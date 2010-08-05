@@ -32,15 +32,22 @@ public class MyContacts extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.my_contacts);
 
-        mContactList = (ListView)findViewById(R.id.contactList);
+        mContactList = (ListView) findViewById(R.id.contactList);
         populateContactList();
 
         mContactList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
           public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Cursor cursor = (Cursor)parent.getItemAtPosition(position);
-            int nameColumn = cursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME);
-            Log.d(TAG, cursor.getString(nameColumn));
-            startActivity(new Intent(MyContacts.this, TheirContacts.class));
+            Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+
+            long contactId = cursor.getInt(cursor.getColumnIndex(ContactsContract.Data._ID));
+            String lookupKey = cursor.getString(cursor.getColumnIndex(ContactsContract.Data.LOOKUP_KEY));
+            Uri uri = ContactsContract.Contacts.getLookupUri(contactId, lookupKey);
+            Log.d(TAG, uri.toString());
+
+            //startActivity(new Intent(MyContacts.this, TheirContacts.class));
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            intent.setClass(MyContacts.this, TheirContacts.class);
+            startActivity(intent);
           }
         });
 
@@ -62,7 +69,8 @@ public class MyContacts extends Activity
       Uri uri = ContactsContract.Contacts.CONTENT_URI;
       String[] projection = new String[] {
         ContactsContract.Contacts._ID,
-        ContactsContract.Contacts.DISPLAY_NAME
+        ContactsContract.Contacts.DISPLAY_NAME,
+        ContactsContract.Contacts.LOOKUP_KEY
       };
       String selection = null;
       String[] selectionArgs = null;
