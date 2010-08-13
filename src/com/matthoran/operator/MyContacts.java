@@ -55,7 +55,16 @@ public class MyContacts extends Activity
   }
   
   private void registerWithServer() {
-	  
+	  ServerRegistrar registrar = new ServerRegistrar();
+	  registrar.execute(myPhoneNumber(), myDeviceId());
+  }
+  
+  private String myPhoneNumber() {
+	  return "8572778808";
+  }
+  
+  private String myDeviceId() {
+	  return "abcde";
   }
 
   private void populateContactList() {
