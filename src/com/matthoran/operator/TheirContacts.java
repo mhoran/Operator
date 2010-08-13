@@ -22,8 +22,19 @@ public class TheirContacts extends Activity {
     Cursor cursor = getContact(intent.getData());
     TextView tv = (TextView) findViewById(R.id.theirContactsText);
     if (cursor.moveToFirst()) {
-      String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME));
-      tv.setText(name);
+      String contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.Data._ID));
+      Cursor phones = getContentResolver().query( 
+        ContactsContract.CommonDataKinds.Phone.CONTENT_URI, 
+        null, 
+        ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = "+ contactId, 
+        null, null); 
+      while (phones.moveToNext()) { 
+        String phoneNumber = phones.getString( 
+          phones.getColumnIndex( 
+            ContactsContract.CommonDataKinds.Phone.NUMBER));                 
+        tv.setText(phoneNumber);
+      } 
+
     }
   }
 
