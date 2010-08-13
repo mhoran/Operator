@@ -33,6 +33,7 @@ public class MyContacts extends Activity
     setContentView(R.layout.my_contacts);
 
     mContactList = (ListView) findViewById(R.id.contactList);
+    registerWithServer();
     populateContactList();
 
     mContactList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -51,6 +52,10 @@ public class MyContacts extends Activity
         }
       }
     });
+  }
+  
+  private void registerWithServer() {
+	  
   }
 
   private void populateContactList() {

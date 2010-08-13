@@ -7,12 +7,13 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.HttpStatus;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpEntity;
+import java.io.InputStream;
 import android.util.Log;
 
 class RefreshContacts extends AsyncTask<String, Void, String> {
   @Override
   protected String doInBackground(String... params) {
-    return "Hello, world!";
+    return refreshContacts("http://operator.mike-burns.com/contacts_list/" + params[0]);
   }
 
   @Override
@@ -28,9 +29,25 @@ class RefreshContacts extends AsyncTask<String, Void, String> {
       final int statusCode = response.getStatusLine().getStatusCode();
       if (statusCode != HttpStatus.SC_OK) {
         Log.w("OSHI~", "Error" + statusCode + " while blah.");
+        return null;
       }
 
       final HttpEntity entity = response.getEntity();
+      
+      if (entity != null) {
+    	  InputStream inputStream = null;
+    	  try {
+    	    inputStream = entity.getContent(); 
+    	    return inputStream.toString();
+    	  } finally {
+            if (inputStream != null) {
+              inputStream.close();
+            }
+    	    entity.consumeContent();
+    	  }
+    	}
+      
+      
     } catch (Exception e) {
       getRequest.abort();
     } finally {
