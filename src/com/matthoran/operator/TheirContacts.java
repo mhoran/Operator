@@ -32,8 +32,6 @@ public class TheirContacts extends Activity {
         String phoneNumber = phones.getString(
           phones.getColumnIndex(
             ContactsContract.CommonDataKinds.Phone.NUMBER));
-        RefreshContacts contactRefresher = new RefreshContacts();
-        contactRefresher.execute(phoneNumber);
       }
     }
   }
