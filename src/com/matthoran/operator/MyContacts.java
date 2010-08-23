@@ -169,7 +169,7 @@ public class MyContacts extends Activity
   
   private class ServerRegistrar extends AsyncTask<Void, Void, Boolean> {
     @Override
-    protected Boolean doInBackground(Void... params) k
+    protected Boolean doInBackground(Void... params) {
       return registerWithServer();
     }
 
