@@ -1,39 +1,36 @@
 package com.matthoran.operator;
 
-import android.app.Activity;
-import android.os.Bundle;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.message.BasicNameValuePair;
+
+import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.net.http.AndroidHttpClient;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.View;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.AdapterView;
-import android.content.Context;
-import android.util.Log;
 
-import android.os.AsyncTask;
-import android.net.http.AndroidHttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.HttpStatus;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpEntity;
-import java.io.InputStream;
-import java.util.List;
-import java.util.ArrayList;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-
-public class MyContacts extends Activity
+public class MyContacts extends ListActivity
 {
   private static final String TAG = "MyContacts";
-
-  private ListView mContactList;
-
-  /** Called when the activity is first created. */
+ 
   @Override
   public void onCreate(Bundle savedInstanceState)
   {
@@ -44,37 +41,41 @@ public class MyContacts extends Activity
      * 3. Update the UI to reflect possible contacts.
      */
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.my_contacts);
 
-    mContactList = (ListView) findViewById(R.id.contactList);
     registerWithServer();
+    
+    setUpContactsList();
+  }
+  
+  @Override
+  protected void onListItemClick(ListView parent, View view, int position, long id) {
+	  super.onListItemClick(parent, view, position, id);
+	  if (position >= 0) {
+		  final Cursor cursor = (Cursor) parent.getItemAtPosition(position);
 
-    mContactList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (position >= 0) {
-          final Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+		  final long contactId = cursor.getInt(cursor.getColumnIndex(ContactsContract.Data._ID));
+		  final String lookupKey = cursor.getString(cursor.getColumnIndex(ContactsContract.Data.LOOKUP_KEY));
+		  Uri uri = ContactsContract.Contacts.getLookupUri(contactId, lookupKey);
 
-          final long contactId = cursor.getInt(cursor.getColumnIndex(ContactsContract.Data._ID));
-          final String lookupKey = cursor.getString(cursor.getColumnIndex(ContactsContract.Data.LOOKUP_KEY));
-          Uri uri = ContactsContract.Contacts.getLookupUri(contactId, lookupKey);
-
-          Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-          intent.setClass(MyContacts.this, TheirContacts.class);
-          startActivity(intent);
-        }
-      }
-    });
+		  Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+		  intent.setClass(MyContacts.this, TheirContacts.class);
+		  startActivity(intent);
+	  }
+  }
+  
+  protected void setUpContactsList() {
+	  Cursor contactsCursor = getContacts();
+	  ListAdapter adapter = new SimpleCursorAdapter(
+			  this,
+			  android.R.layout.simple_list_item_1,
+			  contactsCursor,
+			  new String[] { ContactsContract.Data.DISPLAY_NAME },
+			  new int[] { android.R.id.text1 });
+	  setListAdapter(adapter);
   }
 
   private void populateContactList() {
-    Cursor cursor = getContacts();
-    String[] fields = new String[] {
-      ContactsContract.Data.DISPLAY_NAME
-    };
-    SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-        R.layout.contact_entry, cursor, fields,
-        new int[] {R.id.contactEntryText});
-    mContactList.setAdapter(adapter);
+	  setUpContactsList();
   }
 
   private Cursor getContacts()
